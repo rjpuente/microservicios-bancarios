@@ -1,6 +1,8 @@
 package com.rdevelop.tech_test.service;
 
+import com.rdevelop.tech_test.entity.Cliente;
 import com.rdevelop.tech_test.entity.Cuenta;
+import com.rdevelop.tech_test.repository.ClienteRepository;
 import com.rdevelop.tech_test.repository.CuentaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +14,12 @@ import java.util.Optional;
 public class CuentaService {
 
     private final CuentaRepository cuentaRepository;
+    private final ClienteRepository clienteRepository;
 
     @Autowired
-    public CuentaService(CuentaRepository cuentaRepository) {
+    public CuentaService(CuentaRepository cuentaRepository, ClienteRepository clienteRepository) {
         this.cuentaRepository = cuentaRepository;
+        this.clienteRepository = clienteRepository;
     }
 
     public List<Cuenta> findAllCuenta() {
@@ -27,6 +31,9 @@ public class CuentaService {
     }
 
     public Cuenta createCuenta(Cuenta cuenta) {
+        Cliente cliente = clienteRepository.findById(cuenta.getCliente().getClienteId())
+                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
+        cuenta.setCliente(cliente);
         return cuentaRepository.save(cuenta);
     }
 
