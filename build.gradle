@@ -26,7 +26,10 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.testcontainers:junit-jupiter:1.19.0'
     testImplementation 'org.springframework.amqp:spring-rabbit-test'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.testcontainers:rabbitmq'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
