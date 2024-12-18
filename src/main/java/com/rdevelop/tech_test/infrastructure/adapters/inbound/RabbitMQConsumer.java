@@ -2,6 +2,7 @@ package com.rdevelop.tech_test.infrastructure.adapters.inbound;
 
 import com.rdevelop.tech_test.infrastructure.config.RabbitMQConfig;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component

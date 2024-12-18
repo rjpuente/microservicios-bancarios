@@ -45,20 +45,18 @@ public class ClientServiceTest {
         Cliente cliente = new Cliente();
         BusinessValidationException exception = assertThrows(BusinessValidationException.class,
                 () -> clienteService.createCliente(cliente));
-        assertEquals("Id del cliente requerido", exception.getMessage());
+        assertEquals("El ID del cliente es obligatorio.", exception.getMessage());
     }
 
     @Test
     void createClienteShouldThrowBusinessValidationExceptionWhenClienteIdAlreadyExists() {
-        // Arrange
         Cliente cliente = new Cliente();
         cliente.setClienteId(123l);
         when(clienteRepository.findAll()).thenReturn(Collections.singletonList(cliente));
 
-        // Act & Assert
         BusinessValidationException exception = assertThrows(BusinessValidationException.class,
                 () -> clienteService.createCliente(cliente));
-        assertEquals("Ya existe un cliente con el ID 123.", exception.getMessage());
+        assertEquals("Ya existe un cliente con ese ID.", exception.getMessage());
     }
 
     @Test

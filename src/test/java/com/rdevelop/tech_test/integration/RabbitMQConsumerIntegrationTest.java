@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.profiles.active=test")
 public class RabbitMQConsumerIntegrationTest extends IntegrationTestBase {
     @Autowired
     private RabbitTemplate rabbitTemplate;
