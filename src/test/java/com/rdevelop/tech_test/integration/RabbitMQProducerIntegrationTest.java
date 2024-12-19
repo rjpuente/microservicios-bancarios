@@ -11,14 +11,24 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.RabbitMQContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Testcontainers
 @SpringBootTest(properties = "spring.profiles.active=test")
 public class RabbitMQProducerIntegrationTest extends IntegrationTestBase {
+
+    @Container
+    private static final RabbitMQContainer rabbitMQContainer = new RabbitMQContainer("rabbitmq:3-management")
+            .withExposedPorts(5672, 15672);
 
     @Autowired
     private RabbitMQProducer rabbitMQProducer;
@@ -31,8 +41,24 @@ public class RabbitMQProducerIntegrationTest extends IntegrationTestBase {
 
     private Queue temporaryQueue;
 
+    @DynamicPropertySource
+    static void registerRabbitMQProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.rabbitmq.host", rabbitMQContainer::getHost);
+        registry.add("spring.rabbitmq.port", rabbitMQContainer::getAmqpPort);
+    }
+
     @BeforeEach
     void setup() {
+        // Espera a que el contenedor esté listo antes de configurar la cola
+        Awaitility.await().atMost(10, TimeUnit.SECONDS).until(() -> {
+            try {
+                rabbitTemplate.execute(channel -> true);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        });
+
         temporaryQueue = new Queue("test.temp.queue", false, true, true);
         amqpAdmin.declareQueue(temporaryQueue);
     }
@@ -43,7 +69,7 @@ public class RabbitMQProducerIntegrationTest extends IntegrationTestBase {
             amqpAdmin.deleteQueue(temporaryQueue.getName());
         }
     }
-/*
+
     @Test
     void sendMessageShouldSendMessageToTemporaryQueue() {
         // Arrange
@@ -60,6 +86,4 @@ public class RabbitMQProducerIntegrationTest extends IntegrationTestBase {
             assertEquals(testMessage, body, "El mensaje recibido no coincide con el mensaje enviado.");
         });
     }
-
- */
 }

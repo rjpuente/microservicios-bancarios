@@ -39,11 +39,10 @@ dependencies {
 
 pitest {
     targetClasses = ['com.rdevelop.tech_test.*']
-    excludedClasses = ['com.rdevelop.tech_test.integration.*'] // Excluir todas las pruebas de integración
-    mutators = ['DEFAULTS'] // Mutadores predeterminados
-    excludedMethods = ['sendMessageShouldSendMessageToTemporaryQueue', 'receiveMessage_ShouldProcessMessageFromQueue']
+    jvmArgs = ['-Dspring.profiles.active=test']
+    verbose = true
     junit5PluginVersion = '1.2.0'
-    threads = 4
+    threads = 1
     outputFormats = ['HTML']
     timestampedReports = false
     mutationThreshold = 80
