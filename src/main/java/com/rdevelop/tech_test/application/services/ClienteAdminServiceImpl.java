@@ -1,7 +1,7 @@
-package com.rdevelop.tech_test.application;
+package com.rdevelop.tech_test.application.services;
 
 import com.rdevelop.tech_test.core.domain.Cliente;
-import com.rdevelop.tech_test.core.ports.ClienteAdminServicePort;
+import com.rdevelop.tech_test.core.ports.inbound.ClienteAdminServicePort;
 import com.rdevelop.tech_test.exceptions.EntityNotFoundException;
 import com.rdevelop.tech_test.infrastructure.adapters.outbound.ClienteRepository;
 import org.springframework.stereotype.Service;
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ClienteAdminService implements ClienteAdminServicePort {
+public class ClienteAdminServiceImpl implements ClienteAdminServicePort {
     private final ClienteRepository clienteRepository;
 
-    public ClienteAdminService(ClienteRepository clienteRepository) {
+    public ClienteAdminServiceImpl(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
     }
 

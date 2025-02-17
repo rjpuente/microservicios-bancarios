@@ -42,7 +42,7 @@ pitest {
     jvmArgs = ['-Dspring.profiles.active=test']
     verbose = true
     junit5PluginVersion = '1.2.0'
-    threads = 1
+    threads = 4
     outputFormats = ['HTML']
     timestampedReports = false
     mutationThreshold = 80

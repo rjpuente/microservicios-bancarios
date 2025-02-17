@@ -1,22 +1,19 @@
-package com.rdevelop.tech_test.application;
+package com.rdevelop.tech_test.application.services;
 
 import com.rdevelop.tech_test.core.domain.Cliente;
-import com.rdevelop.tech_test.core.ports.ClienteServicePort;
+import com.rdevelop.tech_test.core.ports.inbound.ClienteServicePort;
 import com.rdevelop.tech_test.exceptions.BusinessValidationException;
 import com.rdevelop.tech_test.exceptions.EntityNotFoundException;
-import com.rdevelop.tech_test.infrastructure.adapters.inbound.RabbitMQConsumer;
 import com.rdevelop.tech_test.infrastructure.adapters.outbound.ClienteRepository;
 import com.rdevelop.tech_test.infrastructure.adapters.outbound.RabbitMQProducer;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class ClienteService implements ClienteServicePort {
+public class ClienteServiceImpl implements ClienteServicePort {
     private final ClienteRepository clienteRepository;
     private final RabbitMQProducer rabbitMQProducer;
 
-    public ClienteService(ClienteRepository repository, RabbitMQProducer rabbitMQProducer) {
+    public ClienteServiceImpl(ClienteRepository repository, RabbitMQProducer rabbitMQProducer) {
         this.clienteRepository = repository;
         this.rabbitMQProducer = rabbitMQProducer;
     }

@@ -1,5 +1,6 @@
 package com.rdevelop.tech_test.application;
 
+import com.rdevelop.tech_test.application.services.ClienteServiceImpl;
 import com.rdevelop.tech_test.core.domain.Cliente;
 import com.rdevelop.tech_test.exceptions.BusinessValidationException;
 import com.rdevelop.tech_test.exceptions.EntityNotFoundException;
@@ -15,7 +16,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ClientServiceTest {
-    private ClienteService clienteService;
+    private ClienteServiceImpl clienteServiceImpl;
     private ClienteRepository clienteRepository;
     private RabbitMQProducer rabbitMQProducer;
 
@@ -23,7 +24,7 @@ public class ClientServiceTest {
     void setUp() {
         clienteRepository = mock(ClienteRepository.class);
         rabbitMQProducer = mock(RabbitMQProducer.class);
-        clienteService = new ClienteService(clienteRepository, rabbitMQProducer);
+        clienteServiceImpl = new ClienteServiceImpl(clienteRepository, rabbitMQProducer);
     }
 
     @Test
@@ -33,7 +34,7 @@ public class ClientServiceTest {
         when(clienteRepository.findAll()).thenReturn(Collections.emptyList());
         when(clienteRepository.save(cliente)).thenReturn(cliente);
 
-        Cliente savedCliente = clienteService.createCliente(cliente);
+        Cliente savedCliente = clienteServiceImpl.createCliente(cliente);
 
         assertNotNull(savedCliente);
         verify(clienteRepository).save(cliente);
@@ -44,7 +45,7 @@ public class ClientServiceTest {
     void createClienteShouldThrowBusinessValidationExceptionWhenClienteIdIsNull() {
         Cliente cliente = new Cliente();
         BusinessValidationException exception = assertThrows(BusinessValidationException.class,
-                () -> clienteService.createCliente(cliente));
+                () -> clienteServiceImpl.createCliente(cliente));
         assertEquals("El ID del cliente es obligatorio.", exception.getMessage());
     }
 
@@ -55,7 +56,7 @@ public class ClientServiceTest {
         when(clienteRepository.findAll()).thenReturn(Collections.singletonList(cliente));
 
         BusinessValidationException exception = assertThrows(BusinessValidationException.class,
-                () -> clienteService.createCliente(cliente));
+                () -> clienteServiceImpl.createCliente(cliente));
         assertEquals("Ya existe un cliente con ese ID.", exception.getMessage());
     }
 
@@ -65,7 +66,7 @@ public class ClientServiceTest {
         cliente.setClienteId(123l);
         when(clienteRepository.findById(123l)).thenReturn(Optional.of(cliente));
 
-        Cliente foundCliente = clienteService.getClienteById(123l);
+        Cliente foundCliente = clienteServiceImpl.getClienteById(123l);
 
         assertNotNull(foundCliente);
         assertEquals(123l, foundCliente.getClienteId());
@@ -77,7 +78,7 @@ public class ClientServiceTest {
         when(clienteRepository.findById(123l)).thenReturn(Optional.empty());
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
-                () -> clienteService.getClienteById(1L));
+                () -> clienteServiceImpl.getClienteById(1L));
         assertEquals("Cliente con ID 1 no encontrado.", exception.getMessage());
     }
 }

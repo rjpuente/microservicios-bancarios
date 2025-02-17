@@ -1,4 +1,4 @@
-package com.rdevelop.tech_test.core.ports;
+package com.rdevelop.tech_test.core.ports.inbound;
 
 import com.rdevelop.tech_test.core.domain.Cliente;
 

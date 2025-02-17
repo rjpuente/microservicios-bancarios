@@ -1,9 +1,7 @@
 package com.rdevelop.tech_test.infrastructure.adapters.inbound;
 
-import com.rdevelop.tech_test.application.ClienteAdminService;
 import com.rdevelop.tech_test.core.domain.Cliente;
-import com.rdevelop.tech_test.core.ports.ClienteAdminServicePort;
-import com.rdevelop.tech_test.core.ports.ClienteServicePort;
+import com.rdevelop.tech_test.core.ports.inbound.ClienteAdminServicePort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
