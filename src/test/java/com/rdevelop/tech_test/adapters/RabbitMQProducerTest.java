@@ -22,8 +22,8 @@ public class RabbitMQProducerTest {
     void sendMessage_ShouldSendMessageToRabbitMQ() {
         String message = "Test message";
 
-        rabbitMQProducer.sendMessage(message);
+        rabbitMQProducer.sendClienteEvent(message);
 
-        verify(rabbitTemplate).convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.ROUTING_KEY, message);
+        verify(rabbitTemplate).convertAndSend(RabbitMQConfig.CLIENT_EXCHANGE, RabbitMQConfig.CLIENT_ROUTING_KEY, message);
     }
 }

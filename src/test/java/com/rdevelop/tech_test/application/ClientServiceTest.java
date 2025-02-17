@@ -38,7 +38,7 @@ public class ClientServiceTest {
 
         assertNotNull(savedCliente);
         verify(clienteRepository).save(cliente);
-        verify(rabbitMQProducer).sendMessage("Cliente creado: " + cliente.getClienteId());
+        verify(rabbitMQProducer).sendClienteEvent("Cliente creado: " + cliente.getClienteId());
     }
 
     @Test
