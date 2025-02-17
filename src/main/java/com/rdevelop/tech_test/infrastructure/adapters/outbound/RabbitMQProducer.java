@@ -12,8 +12,15 @@ public class RabbitMQProducer {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void sendMessage(String message) {
-        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.ROUTING_KEY, message);
-        System.out.println("Mensaje enviado a RabbitMQ: " + message);
+    public void sendClienteEvent(String message) {
+        rabbitTemplate.convertAndSend(RabbitMQConfig.CLIENT_EXCHANGE,
+                RabbitMQConfig.CLIENT_ROUTING_KEY,
+                message);
+    }
+
+    public void sendMovimientoEvent(Object payload) {
+        rabbitTemplate.convertAndSend(RabbitMQConfig.MOVIMIENTOS_EXCHANGE,
+                RabbitMQConfig.MOVIMIENTOS_ROUTING_KEY,
+                payload);
     }
 }

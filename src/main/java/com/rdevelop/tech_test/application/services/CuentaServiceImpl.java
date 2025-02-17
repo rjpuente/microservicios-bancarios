@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CuentaServiceImpl implements CuentaServicePort {
@@ -24,10 +25,11 @@ public class CuentaServiceImpl implements CuentaServicePort {
     }
 
     @Override
-    public Cuenta obtenerCuentaPorNumero(Long numeroCuenta) {
-        return cuentaRepositoryPort.findByNumeroCuenta(numeroCuenta)
-                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
+    public Optional<Cuenta> obtenerCuentaPorNumero(String numeroCuenta) {
+        return Optional.ofNullable(cuentaRepositoryPort.findByNumeroCuenta(numeroCuenta)
+                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada")));
     }
+
 
     @Override
     public List<Cuenta> obtenerCuentasPorCliente(Long idCliente) {

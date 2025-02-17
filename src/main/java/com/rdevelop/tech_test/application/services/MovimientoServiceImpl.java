@@ -7,6 +7,7 @@ import com.rdevelop.tech_test.core.ports.inbound.MovimientoServicePort;
 import com.rdevelop.tech_test.core.ports.outbound.CuentaRepositoryPort;
 import com.rdevelop.tech_test.core.ports.outbound.MovimientoRepositoryPort;
 import com.rdevelop.tech_test.exceptions.SaldoInsuficienteException;
+import com.rdevelop.tech_test.infrastructure.adapters.outbound.RabbitMQProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,16 +19,19 @@ public class MovimientoServiceImpl implements MovimientoServicePort {
 
     private final MovimientoRepositoryPort movimientoRepositoryPort;
     private final CuentaRepositoryPort cuentaRepositoryPort;
+    private final RabbitMQProducer rabbitMQProducer;
 
     @Autowired
-    public MovimientoServiceImpl(MovimientoRepositoryPort movimientoRepositoryPort, CuentaRepositoryPort cuentaRepositoryPort) {
+    public MovimientoServiceImpl(MovimientoRepositoryPort movimientoRepositoryPort, CuentaRepositoryPort cuentaRepositoryPort,
+                                 RabbitMQProducer rabbitMQProducer) {
         this.movimientoRepositoryPort = movimientoRepositoryPort;
         this.cuentaRepositoryPort = cuentaRepositoryPort;
+        this.rabbitMQProducer = rabbitMQProducer;
     }
 
     @Override
     public Movimiento registrarMovimiento(Movimiento movimiento) {
-        Cuenta cuenta = cuentaRepositoryPort.findByNumeroCuenta(movimiento.getCuenta().getId())
+        Cuenta cuenta = cuentaRepositoryPort.findByNumeroCuenta(movimiento.getCuenta().getNumeroCuenta())
                 .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
 
         double saldoActual = cuenta.getSaldoInicial();
@@ -48,6 +52,8 @@ public class MovimientoServiceImpl implements MovimientoServicePort {
         movimiento.setSaldo(saldo);
         movimiento.setFecha(LocalDateTime.now());
         Movimiento movimientoActual = movimientoRepositoryPort.save(movimiento);
+
+        rabbitMQProducer.sendMovimientoEvent(movimiento);
 
         return movimientoActual;
     }

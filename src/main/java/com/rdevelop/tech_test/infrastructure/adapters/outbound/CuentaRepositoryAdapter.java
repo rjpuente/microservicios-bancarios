@@ -5,6 +5,7 @@ import com.rdevelop.tech_test.core.ports.outbound.CuentaRepositoryPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -18,12 +19,18 @@ public class CuentaRepositoryAdapter implements CuentaRepositoryPort {
 
     @Override
     public Cuenta save(Cuenta cuenta) {
-        return cuentaJpaRepository.save(cuenta); // Mapeo a entidad JPA si difiere
+        return cuentaJpaRepository.save(cuenta);
     }
 
     @Override
-    public Optional<Cuenta> findByNumeroCuenta(Long numeroCuenta) {
-        return cuentaJpaRepository.findById(numeroCuenta); // idem, mapeo si hace falta
+    public Optional<Cuenta> findByNumeroCuenta(String numeroCuenta) {
+        return Optional.ofNullable(cuentaJpaRepository.findByNumeroCuenta(numeroCuenta)
+                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada")));
+    }
+
+    @Override
+    public List<Cuenta> findCuentasByUsuario(Long idUsuario) {
+        return cuentaJpaRepository.findByClienteId(idUsuario);
     }
 
     @Override

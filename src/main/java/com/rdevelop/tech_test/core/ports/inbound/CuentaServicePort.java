@@ -9,7 +9,8 @@ import java.util.Optional;
 public interface CuentaServicePort {
     Cuenta crearCuenta(Cuenta cuenta);
 
-    Cuenta obtenerCuentaPorNumero(Long numeroCuenta);
+    Optional<Cuenta> obtenerCuentaPorNumero(String numeroCuenta);
+
     List<Cuenta> obtenerCuentasPorCliente(Long idCliente);
 
     Cuenta actualizarCuenta(Cuenta cuenta);

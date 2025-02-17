@@ -23,7 +23,7 @@ public class ClienteServiceImpl implements ClienteServicePort {
         validateCliente(cliente);
         Cliente savedCliente = clienteRepository.save(cliente);
 
-        rabbitMQProducer.sendMessage("Cliente creado: " + savedCliente.getClienteId());
+        rabbitMQProducer.sendClienteEvent("Cliente creado: " + savedCliente.getClienteId());
 
         return savedCliente;
     }
