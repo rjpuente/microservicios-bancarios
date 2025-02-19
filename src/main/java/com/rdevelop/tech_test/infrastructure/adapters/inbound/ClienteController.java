@@ -3,6 +3,7 @@ package com.rdevelop.tech_test.infrastructure.adapters.inbound;
 import com.rdevelop.tech_test.core.domain.Cliente;
 import com.rdevelop.tech_test.core.ports.inbound.ClienteServicePort;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,8 @@ public class ClienteController {
 
     @PostMapping
     public ResponseEntity<Cliente> createCliente(@RequestBody Cliente cliente) {
-        return ResponseEntity.ok(clienteService.createCliente(cliente));
+        Cliente clienteNuevo = clienteService.createCliente(cliente);
+        return ResponseEntity.status(HttpStatus.CREATED).body(clienteNuevo);
     }
 
     @GetMapping("/{id}")

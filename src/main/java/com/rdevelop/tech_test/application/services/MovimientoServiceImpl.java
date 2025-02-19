@@ -31,10 +31,8 @@ public class MovimientoServiceImpl implements MovimientoServicePort {
 
     @Override
     public Movimiento registrarMovimiento(Movimiento movimiento) {
-        Cuenta cuenta = cuentaRepositoryPort.findByNumeroCuenta(movimiento.getCuenta().getNumeroCuenta())
-                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada"));
 
-        double saldoActual = cuenta.getSaldoInicial();
+        double saldoActual = movimiento.getCuenta().getSaldoInicial();
         double saldo = saldoActual;
 
         if (movimiento.getTipo().equals(TipoMovimiento.DEPOSITO)) {
@@ -46,20 +44,20 @@ public class MovimientoServiceImpl implements MovimientoServicePort {
             }
         }
 
-        cuenta.setSaldoInicial(saldo);
-        cuentaRepositoryPort.save(cuenta);
+        movimiento.getCuenta().setSaldoInicial(saldo);
+        cuentaRepositoryPort.save(movimiento.getCuenta());
 
         movimiento.setSaldo(saldo);
         movimiento.setFecha(LocalDateTime.now());
         Movimiento movimientoActual = movimientoRepositoryPort.save(movimiento);
 
-        rabbitMQProducer.sendMovimientoEvent(movimiento);
+        rabbitMQProducer.sendMovimientoEvent(movimiento.getId());
 
         return movimientoActual;
     }
 
     @Override
-    public List<Movimiento> obtenerMovimientosPorCuenta(Long numeroCuenta) {
+    public List<Movimiento> obtenerMovimientosPorCuenta(String numeroCuenta) {
         return movimientoRepositoryPort.findByNumeroCuenta(numeroCuenta);
     }
 

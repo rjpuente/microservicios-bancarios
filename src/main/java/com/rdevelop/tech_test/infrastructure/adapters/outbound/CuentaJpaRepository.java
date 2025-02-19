@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface CuentaJpaRepository extends JpaRepository<Cuenta, Long> {
     @Query("SELECT c FROM Cuenta c " +
-            "WHERE c.cliente.clienteId = :clienteId")
+            "WHERE c.cliente.id = :clienteId")
     List<Cuenta> findByClienteId(@Param("clienteId") Long clienteId);
 
     @Query("SELECT c FROM Cuenta c " +

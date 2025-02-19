@@ -11,7 +11,7 @@ public interface MovimientoRepositoryPort {
 
     Optional<Movimiento> findById(Long id);
 
-    List<Movimiento> findByNumeroCuenta(Long numeroCuenta);
+    List<Movimiento> findByNumeroCuenta(String numeroCuenta);
 
     List<Movimiento> findByNumeroCuentaAndFechaBetween(Long numeroCuenta, LocalDateTime fechaInicio, LocalDateTime fechaFin);
 }

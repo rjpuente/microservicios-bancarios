@@ -23,7 +23,7 @@ public class ClienteServiceImpl implements ClienteServicePort {
         validateCliente(cliente);
         Cliente savedCliente = clienteRepository.save(cliente);
 
-        rabbitMQProducer.sendClienteEvent("Cliente creado: " + savedCliente.getClienteId());
+        rabbitMQProducer.sendClienteEvent("Cliente creado: " + savedCliente.getId());
 
         return savedCliente;
     }
@@ -35,11 +35,8 @@ public class ClienteServiceImpl implements ClienteServicePort {
     }
 
     private void validateCliente(Cliente cliente) {
-        if (cliente.getClienteId() == null) {
-            throw new BusinessValidationException("El ID del cliente es obligatorio.");
-        }
         if (clienteRepository.findAll().stream()
-                .anyMatch(c -> c.getClienteId().equals(cliente.getClienteId()))) {
+                .anyMatch(c -> c.getIdentificacion().equals(cliente.getIdentificacion()))) {
             throw new BusinessValidationException("Ya existe un cliente con ese ID.");
         }
     }

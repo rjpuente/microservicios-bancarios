@@ -31,7 +31,7 @@ public class MovimientoRepositoryAdapter implements MovimientoRepositoryPort {
     }
 
     @Override
-    public List<Movimiento> findByNumeroCuenta(Long numeroCuenta) {
+    public List<Movimiento> findByNumeroCuenta(String numeroCuenta) {
         return movimientoJpaRepository.findByNumeroCuenta(numeroCuenta);
     }
 

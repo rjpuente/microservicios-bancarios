@@ -13,6 +13,8 @@ public interface CuentaServicePort {
 
     List<Cuenta> obtenerCuentasPorCliente(Long idCliente);
 
+    Cuenta obtenerCuentaPorId(Long idCuenta);
+
     Cuenta actualizarCuenta(Cuenta cuenta);
 
     void eliminarCuenta(Long numeroCuenta);

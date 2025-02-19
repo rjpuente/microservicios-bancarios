@@ -9,7 +9,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MovimientoJpaRepository extends JpaRepository<Movimiento, Long> {
-    List<Movimiento> findByNumeroCuenta(Long numeroCuenta);
+    @Query("SELECT m FROM Movimiento m " +
+    "WHERE m.cuenta.numeroCuenta = :numeroCuenta")
+    List<Movimiento> findByNumeroCuenta(@Param("numeroCuenta") String numeroCuenta);
 
     @Query("SELECT m FROM Movimiento m " +
             "WHERE m.cuenta.id = :clienteId AND m.fecha BETWEEN :fechaInicio AND :fechaFin")

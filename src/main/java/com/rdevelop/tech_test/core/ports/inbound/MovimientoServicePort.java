@@ -8,7 +8,7 @@ import java.util.List;
 public interface MovimientoServicePort {
     Movimiento registrarMovimiento(Movimiento movimiento);
 
-    List<Movimiento> obtenerMovimientosPorCuenta(Long numeroCuenta);
+    List<Movimiento> obtenerMovimientosPorCuenta(String numeroCuenta);
 
     List<Movimiento> obtenerMovimientosPorFecha(Long numeroCuenta, LocalDateTime fechaInicio, LocalDateTime fechaFin);
 }

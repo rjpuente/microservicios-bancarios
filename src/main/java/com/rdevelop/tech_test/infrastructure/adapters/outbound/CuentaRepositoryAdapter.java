@@ -29,6 +29,11 @@ public class CuentaRepositoryAdapter implements CuentaRepositoryPort {
     }
 
     @Override
+    public Cuenta findById(Long id) {
+        return cuentaJpaRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public List<Cuenta> findCuentasByUsuario(Long idUsuario) {
         return cuentaJpaRepository.findByClienteId(idUsuario);
     }

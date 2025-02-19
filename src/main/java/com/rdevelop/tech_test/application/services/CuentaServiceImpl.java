@@ -37,6 +37,11 @@ public class CuentaServiceImpl implements CuentaServicePort {
     }
 
     @Override
+    public Cuenta obtenerCuentaPorId(Long idCuenta) {
+        return cuentaRepositoryPort.findById(idCuenta);
+    }
+
+    @Override
     public Cuenta actualizarCuenta(Cuenta cuenta) {
         return cuentaRepositoryPort.save(cuenta);
     }

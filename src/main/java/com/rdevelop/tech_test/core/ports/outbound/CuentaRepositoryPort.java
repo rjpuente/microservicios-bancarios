@@ -10,6 +10,8 @@ public interface CuentaRepositoryPort {
 
     Optional<Cuenta> findByNumeroCuenta(String numeroCuenta);
 
+    Cuenta findById(Long id);
+
     List<Cuenta> findCuentasByUsuario(Long idUsuario);
 
     void delete(Long numeroCuenta);

@@ -30,7 +30,6 @@ public class ClientServiceTest {
     @Test
     void createClienteShouldSaveClienteAndSendMessageWhenValidCliente() {
         Cliente cliente = new Cliente();
-        cliente.setClienteId(123l);
         when(clienteRepository.findAll()).thenReturn(Collections.emptyList());
         when(clienteRepository.save(cliente)).thenReturn(cliente);
 
@@ -38,7 +37,7 @@ public class ClientServiceTest {
 
         assertNotNull(savedCliente);
         verify(clienteRepository).save(cliente);
-        verify(rabbitMQProducer).sendClienteEvent("Cliente creado: " + cliente.getClienteId());
+        verify(rabbitMQProducer).sendClienteEvent("Cliente creado: " + cliente.getId());
     }
 
     @Test
@@ -52,7 +51,6 @@ public class ClientServiceTest {
     @Test
     void createClienteShouldThrowBusinessValidationExceptionWhenClienteIdAlreadyExists() {
         Cliente cliente = new Cliente();
-        cliente.setClienteId(123l);
         when(clienteRepository.findAll()).thenReturn(Collections.singletonList(cliente));
 
         BusinessValidationException exception = assertThrows(BusinessValidationException.class,
@@ -63,13 +61,12 @@ public class ClientServiceTest {
     @Test
     void getClienteByIdShouldReturnClienteWhenClienteExists() {
         Cliente cliente = new Cliente();
-        cliente.setClienteId(123l);
         when(clienteRepository.findById(123l)).thenReturn(Optional.of(cliente));
 
         Cliente foundCliente = clienteServiceImpl.getClienteById(123l);
 
         assertNotNull(foundCliente);
-        assertEquals(123l, foundCliente.getClienteId());
+        assertEquals(123l, foundCliente.getId());
         verify(clienteRepository).findById(123l);
     }
 
