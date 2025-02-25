@@ -1,5 +1,6 @@
 package com.rdevelop.tech_test.core.domain;
 
+import com.rdevelop.tech_test.application.DTO.MovimientoRequestDto;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import com.rdevelop.tech_test.core.domain.Cliente;
 import com.rdevelop.tech_test.core.domain.Cuenta;
 import com.rdevelop.tech_test.core.domain.Movimiento;
+import com.rdevelop.tech_test.exceptions.ErrorResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class MovimientoControllerIntegrationTest extends IntegrationTestBase {
         Cuenta cuenta = crearCuenta("999ABC", 100.00);
 
         Map<String, Object> params = new HashMap<>();
-        params.put("cuenta", cuenta);
+        params.put("cuentaId", cuenta.getId());
         params.put("tipo", "DEPOSITO");
         params.put("valor", 200.0);
 
@@ -43,20 +44,40 @@ public class MovimientoControllerIntegrationTest extends IntegrationTestBase {
 
     }
 
+
+    @Test
+    void registrarMovimientoDepositoCamposInsuficientes() {
+        Cuenta cuenta = crearCuenta("999ABC", 100.00);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("cuentaId", cuenta.getId());
+        params.put("tipo", "DEPOSITO");
+        params.put("valor", 0.0);
+
+        ResponseEntity<ErrorResponse> response = restTemplate.postForEntity("/movimientos", params, ErrorResponse.class);
+
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        ErrorResponse error = response.getBody();
+        Assertions.assertNotNull(error);
+        assertTrue(error.getMessage().contains("El valor debe ser al menos 1"));
+
+    }
+
     @Test
     void registrarMovimientoRetidoSaldoInsuficiente() {
         Cuenta cuenta = crearCuenta("RET123", 500.00);
 
         Map<String, Object> params = new HashMap<>();
-        params.put("cuenta", cuenta);
+        params.put("cuentaId", cuenta.getId());
         params.put("tipo", "RETIRO");
         params.put("valor", 800.00);
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/movimientos", params, String.class);
+        ResponseEntity<ErrorResponse> response = restTemplate.postForEntity("/movimientos", params, ErrorResponse.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        String body = response.getBody();
-        assertTrue(body.contains("Saldo insuficiente"));
+        ErrorResponse error = response.getBody();
+        assertTrue(error.getMessage().contains("Saldo insuficiente"));
     }
 
     private Cuenta crearCuenta(String numeroCuenta, double saldoInicial) {
