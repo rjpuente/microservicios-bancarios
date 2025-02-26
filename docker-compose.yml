@@ -1,11 +1,11 @@
 version: '3.8'
 services:
-  app:
-    build: .
+  cliente-service:
+    build: ./cliente-service
     ports:
-      - "3000:3000"
+      - "3000:3000"  # Expuesto en el host en el puerto 3000
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/db
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin1234
       SPRING_RABBITMQ_HOST: rabbitmq
@@ -13,11 +13,28 @@ services:
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
     depends_on:
-      - db
+      - mysql-db
       - rabbitmq
 
-  db:
+  cuenta-service:
+    build: ./cuenta-service
+    ports:
+      - "3001:3000"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin1234
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+    depends_on:
+      - mysql-db
+      - rabbitmq
+
+  mysql-db:
     image: mysql:latest
+    container_name: mysql-db
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: db
@@ -30,12 +47,13 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+    container_name: rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
 volumes:
   mysql-data:

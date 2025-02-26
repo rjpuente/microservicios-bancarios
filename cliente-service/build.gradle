@@ -2,10 +2,11 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'info.solidsoft.pitest' version '1.9.11'
 }
 
-group = 'com.rdevelop'
-version = '0.0.1-SNAPSHOT'
+group = 'com.example'
+version = '0.0.1'
 
 java {
     toolchain {
@@ -36,6 +37,17 @@ dependencies {
     testImplementation 'org.testcontainers:rabbitmq'
     testImplementation 'com.h2database:h2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+pitest {
+    targetClasses = ['com.example.clienteservice.*']
+    jvmArgs = ['-Dspring.profiles.active=test']
+    verbose = true
+    junit5PluginVersion = '1.2.0'
+    threads = 4
+    outputFormats = ['HTML']
+    timestampedReports = false
+    mutationThreshold = 80
 }
 
 tasks.named('test') {
